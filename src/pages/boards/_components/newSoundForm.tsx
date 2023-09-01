@@ -15,16 +15,7 @@ const initialData = [
 ];
 
 
-	// async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
-	// 	e.preventDefault();
-	// 	const form = e.target as HTMLFormElement;
-	// 	if (form.checkValidity() === false) {
-	// 		form.querySelector("input")?.focus();
-	// 	}
-
-	// 	// @ts-ignore
-	// 	const formData = new FormData(e.target);
-	// }
+	
 
 
 export function NewSoundForm() {
@@ -42,30 +33,50 @@ export function NewSoundForm() {
     }
 
 
-    function onSubmit(e: React.FormEvent<HTMLFormElement>){
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
+
+			const form = e.target as HTMLFormElement;
+			if (form.checkValidity() === false) {
+                // todo: validate the inputs
+                return;
+			}
+            
+
+
+            await fetch('/api/boards/new', {
+                body: JSON.stringify(sounds),
+                method: "POST",
+                headers: {
+                    'content-type': 'application/json'
+                }
+            })
+
     }
 
 
 	return (
 		<form noValidate onSubmit={onSubmit}  className="space-y-4">
-			<div className="grid grid-cols-4 gap-3">
+			<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
 				{sounds.map(({ id, url }) => {
 					return (
 						<SoundCard key={id}>
 							<input
 								onChange={(e) => updateSounds(id, e.target)}
-								className="bg-transparent focus:outline-none"
+								className="bg-transparent focus:outline-none w-full"
 								value={url}
+                                type="url"
+                                required
 							/>
 						</SoundCard>
 					);
 				})}
-				<Button onClick={() => setSounds((prevSound) => [...prevSound, {id: String(Math.random()), url: ''}])}>
+				<Button type="button" className="h-full rounded-xl" variant={'outline'} onClick={() => setSounds((prevSound) => [...prevSound, {id: String(Math.random()), url: ''}])}>
                     <PlusIcon className="mr-1 h-5 w-5"/>
                     Add New Sound
                 </Button>
 			</div>
+            <Button type="submit" className="w-full" >Create Board</Button>
 		</form>
 	);
 }

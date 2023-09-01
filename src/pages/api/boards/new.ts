@@ -1,15 +1,18 @@
 import type { APIRoute } from "astro";
-import { z } from "zod"
+import { z } from "zod";
 
+const payload = z.array(
+	z.object({
+		url: z.string().url(),
+		id: z.string(),
+	}),
+);
 
-const payload = z.object({
-    url: z.string().url()
-})
+export const POST: APIRoute = async ({ request }) => {
+	const raw = await request.json();
+    // todo: add try catch for validation and handling errors
+	const data = payload.parse(raw);
+	console.log(data);
 
-export const POST: APIRoute = async({request}) => {
-    const body = await request.formData()
-    const data = payload.parse(Object.fromEntries(body))
-    console.log(data.url)
-
-    return new Response(JSON.stringify({msg: 'ok'}))
-}
+	return new Response(JSON.stringify({ msg: "ok" }));
+};
