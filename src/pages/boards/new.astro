@@ -1,0 +1,13 @@
+---
+import MainLayout from "@/layouts/MainLayout.astro";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { NewSoundForm } from "./_components/newSoundForm";
+---
+
+<MainLayout>
+	<div class="mx-auto max-w-lg mt-10">
+		<h1 class="text-center text-2xl font-semibold">New Board</h1>
+		<NewSoundForm client:load />
+	</div>
+</MainLayout>
