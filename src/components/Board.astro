@@ -1,0 +1,20 @@
+---
+import type { BoardType } from "@/db/schema";
+import { Card, CardTitle } from "./ui/card";
+import { formatDistance } from "date-fns";
+
+type Props = BoardType & { soundCount: number };
+
+const { name, createdAt, id, soundCount } = Astro.props;
+const date = createdAt.toISOString();
+const relativeTime = formatDistance(createdAt, new Date());
+---
+
+<a href={`/boards/${id}`}>
+	<Card className="p-4 h-full">
+		<CardTitle>{name}</CardTitle>
+
+		<div>sounds: {soundCount}</div>
+		<time datetime={date}>created {relativeTime}</time>
+	</Card>
+</a>

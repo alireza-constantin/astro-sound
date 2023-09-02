@@ -15,9 +15,6 @@ const initialData = [
 ];
 
 
-	
-
-
 export function NewSoundForm() {
 	const [sounds, setSounds] = useState<Array<Sound>>(() => initialData);
 
