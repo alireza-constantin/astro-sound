@@ -1,10 +1,10 @@
 ---
-import { db, type BoardType, Board as BoardModel } from "@/db/schema";
+import { db, Board as BoardModel } from "@/db/schema";
 import { CreateBoard } from "./_components/createBoard";
 import Board from "@/components/Board.astro";
 import MainLayout from "@/layouts/MainLayout.astro";
 
-const Boards = await db.select().from(BoardModel);
+const Boards = await db.select().from(BoardModel)
 
 
 ---

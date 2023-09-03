@@ -8,15 +8,8 @@ type Sound = {
 	url: string;
 };
 
-const initialData = [
-	{ id: "123", url: "http://www.1.com" },
-	{ id: "132", url: "http://www.2.com" },
-	{ id: "133", url: "http://www.3.com" },
-];
-
-
 export function NewSoundForm() {
-	const [sounds, setSounds] = useState<Array<Sound>>(() => initialData);
+	const [sounds, setSounds] = useState<Array<Sound>>([]);
 
     function updateSounds(id: string, target: HTMLInputElement){
             const newUrl = target.value;
@@ -73,7 +66,7 @@ export function NewSoundForm() {
                     Add New Sound
                 </Button>
 			</div>
-            <Button type="submit" className="w-full" >Create Board</Button>
+            <Button type="submit" className="w-full" >Save Sounds</Button>
 		</form>
 	);
 }
