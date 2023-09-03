@@ -1,7 +1,9 @@
 ---
 import { db, boards, sounds, type Sound } from "@/db/schema";
 import MainLayout from "@/layouts/MainLayout.astro";
+import { BoardMenu } from "./_components/boardMenu"
 import { NewSoundForm } from "./_components/newSoundForm";
+import { DeleteDialog } from "./_components/deleteDialog";
 import { eq, sql } from "drizzle-orm";
 const { id } = Astro.params;
 if (!id) return;
@@ -14,7 +16,14 @@ console.log(soundsList);
 
 <MainLayout>
 	<div class="mx-auto max-w-5xl mt-10">
-		<h1 class="text-center text-2xl font-semibold mb-8">{board.name}</h1>
+		<div class="mb-8 flex">
+		<h1 class="text-center flex-1 text-2xl font-semibold mb-8">{board.name}</h1>
+		<div class="ml-auto">
+			<BoardMenu client:load >
+				<DeleteDialog client:load />
+			</BoardMenu>
+		</div>
+		</div>
 		<NewSoundForm soundList={soundsList} boardId={board.id} client:load />
 	</div>
 </MainLayout>
