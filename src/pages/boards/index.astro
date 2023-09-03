@@ -1,10 +1,10 @@
 ---
-import { db, Board as BoardModel } from "@/db/schema";
+import { db, boards } from "@/db/schema";
 import { CreateBoard } from "./_components/createBoard";
 import Board from "@/components/Board.astro";
 import MainLayout from "@/layouts/MainLayout.astro";
 
-const Boards = await db.select().from(BoardModel);
+const boardItems = await db.select().from(boards);
 
 // select the sound count
 // const test = await db.select({
@@ -19,7 +19,7 @@ const Boards = await db.select().from(BoardModel);
 		<h1 class="text-center text-2xl font-semibold mb-8">Boards</h1>
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 mb-4">
 			{
-				Boards.map((board) => (
+				boardItems.map((board) => (
 					<Board
 						id={board.id}
 						createdAt={board.createdAt}

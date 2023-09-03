@@ -1,5 +1,5 @@
 ---
-import { db, Board as BoardModel } from "@/db/schema";
+import { db, boards } from "@/db/schema";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { NewSoundForm } from "./_components/newSoundForm";
 import { eq } from "drizzle-orm";
@@ -7,7 +7,7 @@ const { id } = Astro.params;
 if(!id) return;
 
 
-const board = (await db.select().from(BoardModel).where(eq(BoardModel.id, id)))[0]
+const board = (await db.select().from(boards).where(eq(boards.id, id)))[0]
 console.log(board);
 ---
 

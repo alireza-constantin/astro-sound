@@ -1,4 +1,4 @@
-import { Board, db } from "@/db/schema";
+import { boards, db } from "@/db/schema";
 import type { APIRoute } from "astro";
 import { z } from "zod";
 
@@ -12,7 +12,7 @@ export const POST: APIRoute = async ({ request }) => {
 	const data = Object.fromEntries(raw.entries());
 	try {
 		const { name } = payload.parse(data);
-		const [board] = await db.insert(Board).values({ name }).returning()
+		const [board] = await db.insert(boards).values({ name }).returning()
 		return new Response(JSON.stringify({ boardId: board.id }));
 
 	} catch (error) {
