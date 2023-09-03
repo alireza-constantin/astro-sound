@@ -39,7 +39,6 @@ export function CreateBoard() {
 					disabled={loading}
 					type="submit"
 					className="w-full rounded-xl"
-					variant={"outline"}
 				>
 					{loading ? (
 						<>
@@ -48,8 +47,8 @@ export function CreateBoard() {
 						</>
 					) : (
 						<>
-							<span>Create New Board</span>
 							<PlusIcon className="mr-1 h-5 w-5" />
+							<span>Create New Board</span>
 						</>
 					)}
 				</Button>

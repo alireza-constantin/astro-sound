@@ -2,6 +2,7 @@
 import type { BoardType } from "@/db/schema";
 import { Card, CardTitle } from "./ui/card";
 import { formatDistance } from "date-fns";
+import { VideoIcon } from "@radix-ui/react-icons";
 
 type Props = BoardType & { soundCount: number };
 
@@ -11,10 +12,11 @@ const relativeTime = formatDistance(createdAt, new Date());
 ---
 
 <a href={`/boards/${id}`}>
-	<Card className="p-4 h-full">
-		<CardTitle>{name}</CardTitle>
-
-		<div>sounds: {soundCount}</div>
-		<time datetime={date}>created {relativeTime}</time>
+	<Card className="p-4 h-full hover:border-gray-400">
+		<div class="flex items-center justify-between">
+			<CardTitle className="pb-1 text-xl">{name}</CardTitle>
+			<div class="flex items-center gap-2"><span><VideoIcon className="h-5 w-5" /></span><span>{soundCount}</span></div>
+		</div>
+		<time class="text-xs text-gray-500" datetime={date}>created {relativeTime}</time>
 	</Card>
 </a>

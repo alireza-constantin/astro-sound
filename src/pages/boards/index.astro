@@ -1,17 +1,20 @@
 ---
-import { db, boards } from "@/db/schema";
+import { db, boards, sounds } from "@/db/schema";
 import { CreateBoard } from "./_components/createBoard";
 import Board from "@/components/Board.astro";
 import MainLayout from "@/layouts/MainLayout.astro";
+import { eq, sql } from "drizzle-orm";
 
-const boardItems = await db.select().from(boards);
+// const boardItems = await db.select().from(boards);
 
 // select the sound count
-// const test = await db.select({
-// 	id: BoardModel.id,
-// 	soundCount: sql<number>`count(${BoardItems.id})`
-// }).from(BoardModel).innerJoin(BoardItems, eq(BoardItems.id, BoardModel.id)).groupBy(sql`${BoardModel.id}`)
-// console.log(test);
+const boardItems = await db.select({
+	id: boards.id,
+	name: boards.name,
+	createdAt: boards.createdAt,
+	soundCount: sql<number>`count(${sounds.id})`
+}).from(boards).leftJoin(sounds, eq(sounds.boardId, boards.id)).groupBy(sql`${boards.id}`)
+console.log(boardItems);
 ---
 
 <MainLayout>
@@ -24,7 +27,7 @@ const boardItems = await db.select().from(boards);
 						id={board.id}
 						createdAt={board.createdAt}
 						name={board.name}
-						soundCount={3}
+						soundCount={board.soundCount}
 					/>
 				))
 			}
