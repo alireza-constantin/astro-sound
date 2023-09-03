@@ -1,19 +1,20 @@
 ---
-import { db, boards } from "@/db/schema";
+import { db, boards, sounds, type Sound } from "@/db/schema";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { NewSoundForm } from "./_components/newSoundForm";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 const { id } = Astro.params;
-if(!id) return;
+if (!id) return;
 
-
-const board = (await db.select().from(boards).where(eq(boards.id, id)))[0]
-console.log(board);
+// boardId:
+const board = (await db.select().from(boards).where(eq(boards.id, id)))[0];
+const soundsList = await db.select().from(sounds).where(eq(sounds.boardId, id))
+console.log(soundsList);
 ---
 
 <MainLayout>
 	<div class="mx-auto max-w-5xl mt-10">
 		<h1 class="text-center text-2xl font-semibold mb-8">{board.name}</h1>
-		<NewSoundForm boardId={board.id} client:load />
+		<NewSoundForm soundList={soundsList} boardId={board.id} client:load />
 	</div>
 </MainLayout>

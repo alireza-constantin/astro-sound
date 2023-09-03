@@ -8,11 +8,15 @@ type Sound = {
 	id: string;
 };
 
-export function NewSoundForm({ boardId }: { boardId: string }) {
-	const [sounds, setSounds] = useState<Array<Sound>>([]);
-	const [loading, setLoading] = useState(false);
+type Props = {
+	boardId: string,
+	soundList: Array<Sound>
+}
 
-	console.log(boardId);
+
+export function NewSoundForm({ boardId, soundList }: Props) {
+	const [sounds, setSounds] = useState<Array<Sound>>(() => soundList);
+	const [loading, setLoading] = useState(false);
 
 	function updateSounds(id: string, target: HTMLInputElement) {
 		const newUrl = target.value;

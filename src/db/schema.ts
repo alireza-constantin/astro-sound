@@ -20,5 +20,5 @@ export const sounds = pgTable("sound", {
 
 export const db = drizzle(sql)
 
-export type BoardType = InferSelectModel<typeof boards>
-export type BoardItemType = InferSelectModel<typeof sounds>
+export type Board = InferSelectModel<typeof boards>
+export type Sound = InferSelectModel<typeof sounds>
