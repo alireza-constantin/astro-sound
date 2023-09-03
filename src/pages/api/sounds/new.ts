@@ -10,8 +10,9 @@ export const POST: APIRoute = async ({ request }) => {
 	const raw = await request.json();
 	// // todo: add try catch for validation and handling errors
 	try {
+		console.log(raw);
 		// const { name } = payload.parse(data);
-		await db.insert(sounds).values(raw);
+		// await db.insert(sounds).values(raw)
 		return new Response(JSON.stringify({ msg: 'ok' }));
 	} catch (error) {
 		console.log(error);

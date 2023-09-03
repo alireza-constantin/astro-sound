@@ -1,10 +1,10 @@
 ---
-import type { BoardType } from "@/db/schema";
+import type { Board } from "@/db/schema";
 import { Card, CardTitle } from "./ui/card";
 import { formatDistance } from "date-fns";
 import { VideoIcon } from "@radix-ui/react-icons";
 
-type Props = BoardType & { soundCount: number };
+type Props = Board & { soundCount: number };
 
 const { name, createdAt, id, soundCount } = Astro.props;
 const date = createdAt.toISOString();
@@ -14,7 +14,7 @@ const relativeTime = formatDistance(createdAt, new Date());
 <a href={`/boards/${id}`}>
 	<Card className="p-4 h-full hover:border-gray-400">
 		<div class="flex items-center justify-between">
-			<CardTitle className="pb-1 text-xl">{name}</CardTitle>
+			<CardTitle className="pb-4 text-xl">{name}</CardTitle>
 			<div class="flex items-center gap-2"><span><VideoIcon className="h-5 w-5" /></span><span>{soundCount}</span></div>
 		</div>
 		<time class="text-xs text-gray-500" datetime={date}>created {relativeTime}</time>

@@ -29,17 +29,14 @@ export function CreateBoard() {
 		<Card className="p-4">
 			<form onSubmit={submitHandler} className="space-y-2">
 				<input
-					className="bg-transparent px-4 focus:outline-none w-full"
-					placeholder="name"
+					className="bg-transparent font-semibold placeholder:font-normal placeholder:text-neutral-700 mb-4 pb-1 transition-colors duration-100 border-b-[1px] border-transparent focus:border-neutral-800 focus:outline-none w-full"
+					placeholder="Board Name"
 					name="name"
 					type="text"
+					autoComplete="off"
 					required
 				/>
-				<Button
-					disabled={loading}
-					type="submit"
-					className="w-full rounded-xl"
-				>
+				<Button disabled={loading} type="submit" className="w-full">
 					{loading ? (
 						<>
 							<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
