@@ -9,9 +9,6 @@ import type { APIRoute } from "astro";
 export const POST: APIRoute = async ({ request }) => {
 	const raw = await request.json();
 	// // todo: add try catch for validation and handling errors
-	// const data = Object.fromEntries(raw.entries());
-    console.log(raw);
-    // const test = []
 	try {
 		// const { name } = payload.parse(data);
 		const sounds = await db.insert(BoardItems).values(raw).returning();
