@@ -4,9 +4,14 @@ import { CreateBoard } from "./_components/createBoard";
 import Board from "@/components/Board.astro";
 import MainLayout from "@/layouts/MainLayout.astro";
 
-const Boards = await db.select().from(BoardModel)
+const Boards = await db.select().from(BoardModel);
 
-
+// select the sound count
+// const test = await db.select({
+// 	id: BoardModel.id,
+// 	soundCount: sql<number>`count(${BoardItems.id})`
+// }).from(BoardModel).innerJoin(BoardItems, eq(BoardItems.id, BoardModel.id)).groupBy(sql`${BoardModel.id}`)
+// console.log(test);
 ---
 
 <MainLayout>

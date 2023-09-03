@@ -4,12 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PlusIcon } from '@radix-ui/react-icons'
 
 type Sound = {
-	id: string;
 	url: string;
+	id: string
 };
 
-export function NewSoundForm() {
+export function NewSoundForm({ boardId }: { boardId: string }) {
 	const [sounds, setSounds] = useState<Array<Sound>>([]);
+
+	console.log(boardId)
+
 
     function updateSounds(id: string, target: HTMLInputElement){
             const newUrl = target.value;
@@ -32,10 +35,11 @@ export function NewSoundForm() {
                 return;
 			}
             
+			const soundsWithBoardId = sounds.map((sound) => ({ url: sound.url, boardId})) 
 
 
-            await fetch('/api/boards/new', {
-                body: JSON.stringify(sounds),
+            await fetch('/api/sounds/new', {
+                body: JSON.stringify(soundsWithBoardId),
                 method: "POST",
                 headers: {
                     'content-type': 'application/json'
