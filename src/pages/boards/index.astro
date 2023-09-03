@@ -1,29 +1,12 @@
 ---
-import type { BoardType } from "@/db/schema";
+import { db, type BoardType, Board as BoardModel } from "@/db/schema";
 import { CreateBoard } from "./_components/createBoard";
 import Board from "@/components/Board.astro";
 import MainLayout from "@/layouts/MainLayout.astro";
 
-const BOARDS: Array<BoardType & { soundCount: number }> = [
-	{
-		name: "booho",
-		createdAt: new Date("2022-12-25"),
-		id: "123sdasdaSUsdannsdOSODS",
-		soundCount: 3,
-	},
-	{
-		name: "wag-wag",
-		createdAt: new Date("2023-08-28"),
-		id: "123sdasdaSUsdannsasdczccxz",
-		soundCount: 2,
-	},
-	{
-		name: "kooak-kooak",
-		createdAt: new Date("2023-09-01"),
-		id: "123sdasdaSUsdannsdOcadas",
-		soundCount: 0,
-	},
-];
+const Boards = await db.select().from(BoardModel);
+
+
 ---
 
 <MainLayout>
@@ -31,16 +14,16 @@ const BOARDS: Array<BoardType & { soundCount: number }> = [
 		<h1 class="text-center text-2xl font-semibold mb-8">Boards</h1>
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 mb-4">
 			{
-				BOARDS.map((board) => (
+				Boards.map((board) => (
 					<Board
 						id={board.id}
 						createdAt={board.createdAt}
 						name={board.name}
-						soundCount={board.soundCount}
+						soundCount={3}
 					/>
 				))
 			}
 		</div>
-		<CreateBoard />
+		<CreateBoard client:load />
 	</div>
 </MainLayout>

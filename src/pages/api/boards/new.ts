@@ -1,18 +1,22 @@
+import { Board, db } from "@/db/schema";
 import type { APIRoute } from "astro";
 import { z } from "zod";
 
-const payload = z.array(
-	z.object({
-		url: z.string().url(),
-		id: z.string(),
-	}),
-);
+const payload = z.object({
+	name: z.string(),
+});
 
 export const POST: APIRoute = async ({ request }) => {
-	const raw = await request.json();
-    // todo: add try catch for validation and handling errors
-	const data = payload.parse(raw);
-	console.log(data);
+	const raw = await request.formData();
+	// // todo: add try catch for validation and handling errors
+	const data = Object.fromEntries(raw.entries());
+	try {
+		const { name } = payload.parse(data);
+		const [board] = await db.insert(Board).values({ name }).returning()
+		return new Response(JSON.stringify({ boardId: board.id }));
 
-	return new Response(JSON.stringify({ msg: "ok" }));
+	} catch (error) {
+		console.log(error)
+		return new Response(JSON.stringify({ msg: "handle error" }), { status: 400 });
+	}
 };
