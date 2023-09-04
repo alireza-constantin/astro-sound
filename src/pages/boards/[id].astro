@@ -10,7 +10,6 @@ const { id } = Astro.params;
 if (!id) return;
 
 const url = new URL(id, Astro.url).href;
-console.log(url)
 
 // boardId:
 const board = (await db.select().from(boards).where(eq(boards.id, id)))[0];

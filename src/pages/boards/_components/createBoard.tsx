@@ -8,10 +8,11 @@ export function CreateBoard() {
 
 	async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+		if(e.currentTarget.checkValidity()){
+			return;
+		}
 		setLoading(true);
 		const formData = new FormData(e.currentTarget);
-		const name = formData.get("name");
-		if (!name || name.toString().trim() === "") return;
 		try {
 			const res = await fetch("/api/boards/new", {
 				body: formData,
@@ -27,15 +28,26 @@ export function CreateBoard() {
 
 	return (
 		<Card className="p-4">
-			<form onSubmit={submitHandler} className="space-y-2">
-				<input
-					className="bg-transparent font-semibold placeholder:font-normal placeholder:text-neutral-700 mb-4 pb-1 transition-colors duration-100 border-b-[1px] border-transparent focus:border-neutral-800 focus:outline-none w-full"
-					placeholder="Board Name"
-					name="name"
-					type="text"
-					autoComplete="off"
-					required
-				/>
+			<form noValidate onSubmit={submitHandler}>
+				<div className="mb-4">
+					<input
+						className="bg-transparent peer mb-1 font-semibold aria-checked:invalid:border-b-rose-500 aria-checked:focus:invalid:border-b-rose-500 placeholder:font-normal placeholder:text-neutral-700 pb-1 transition-colors duration-100 border-b-[1px] border-transparent focus:border-neutral-800 focus:outline-none w-full"
+						placeholder="Board Name"
+						name="name"
+						aria-checked="false"
+						type="text"
+						pattern="[^' ']+"
+						autoComplete="off"
+						required
+						onFocus={(e) => {
+							if(e.currentTarget.getAttribute('aria-checked') === 'true') return;
+							e.currentTarget.setAttribute("aria-checked", "true")
+						}}
+					/>
+					<span className="text-[10px] hidden peer-aria-checked:peer-invalid:block text-rose-500">
+						* white spaces not allowed
+					</span>
+				</div>
 				<Button disabled={loading} type="submit" className="w-full">
 					{loading ? (
 						<>
