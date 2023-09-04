@@ -14,9 +14,16 @@ import type { ReactNode } from "react";
 
 type Props = {
 	children: ReactNode;
+	url: string
 };
 
-export function BoardMenu({ children }: Props) {
+export function BoardMenu({ children, url }: Props) {
+	function handleShareCopy(e: React.MouseEvent<HTMLDivElement>){
+		if(navigator.clipboard){
+			navigator.clipboard.writeText(url);
+		}
+	}
+	
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="border-none" asChild>
@@ -27,7 +34,7 @@ export function BoardMenu({ children }: Props) {
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
 						{children}
-					<DropdownMenuItem>
+					<DropdownMenuItem onClick={handleShareCopy}>
 						Share
 						<DropdownMenuShortcut>
 							<Share1Icon />

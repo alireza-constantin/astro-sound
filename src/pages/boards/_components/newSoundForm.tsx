@@ -30,14 +30,14 @@ export function NewSoundForm({ boardId, soundList }: Props) {
 	}
 
 	async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-		setLoading(true);
 		e.preventDefault();
-
+		
 		const form = e.target as HTMLFormElement;
 		if (form.checkValidity() === false) {
 			// todo: validate the inputs
 			return;
 		}
+		setLoading(true);
 
 		const soundsWithBoardId = sounds.map((sound) => ({ url: sound.url, boardId }));
 		// try {

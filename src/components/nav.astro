@@ -1,0 +1,13 @@
+---
+const NAV = [
+	{ text: "Home", url: "/" },
+	{ text: "Board", url: "/boards" },
+];
+---
+
+<div class="w-full flex justify-between items-center px-2 sm:px-8 py-4 border-b-[1px] border-b-neutral-600">
+	<div class="text-xl font-mono font-extrabold cursor-pointer hover:opacity-70"><a href="/">Zhib-Zhab</a></div>
+	<div>
+		{NAV.map((n) =>  <a class="ml-4 hover:opacity-70" href={n.url}>{n.text}</a> )}
+	</div>
+</div>

@@ -9,20 +9,23 @@ import { eq } from "drizzle-orm";
 const { id } = Astro.params;
 if (!id) return;
 
+const url = new URL(id, Astro.url).href;
+console.log(url)
+
 // boardId:
 const board = (await db.select().from(boards).where(eq(boards.id, id)))[0];
 const soundsList = await db.select().from(sounds).where(eq(sounds.boardId, id))
 console.log(soundsList);
 ---
 
-<MainLayout>
+<MainLayout url="/boards">
 	<div class="mx-auto max-w-5xl mt-10">
 		<!-- handle this better -->
 		{!board && <h1>There isn't any board with id of {id}</h1>}
 		{board && <div class="mb-8 flex">
 		<h1 class="text-center flex-1 text-2xl font-semibold mb-8">{board.name}</h1>
 		<div class="ml-auto">
-			<BoardMenu client:load >
+			<BoardMenu url={url} client:load >
 				<DeleteDialog boardId={board.id} client:load />
 				<RenameDialog boardId={board.id} boardName={board.name} client:load />
 			</BoardMenu>

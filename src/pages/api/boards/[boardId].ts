@@ -2,7 +2,7 @@ import { boards, db } from "@/db/schema";
 import type { APIRoute } from "astro";
 import { eq } from "drizzle-orm";
 
-export const DELETE: APIRoute = async ({ params, redirect }) => {
+export const DELETE: APIRoute = async ({ params }) => {
 	const { boardId } = params;
 	// // todo: add try catch for validation and handling errors
 	if (!boardId) {

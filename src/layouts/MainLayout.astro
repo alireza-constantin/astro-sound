@@ -1,6 +1,17 @@
 ---
 import "@/styles/globals.css";
+import { Button } from "@/components/ui";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import Nav from "@/components/nav.astro"
 import { ViewTransitions } from "astro:transitions";
+
+type Props = {
+	url?: string;
+};
+
+const { url } = Astro.props;
+const backUrl = new URL(url || "/", Astro.url).href;
+const isHome = Astro.url.pathname === "/";
 ---
 
 <html lang="en">
@@ -10,10 +21,21 @@ import { ViewTransitions } from "astro:transitions";
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro</title>
-		<ViewTransitions transition:animate={'none'} />
+		<ViewTransitions transition:animate={"none"} />
 	</head>
 	<body class="dark">
+		<Nav />
 		<div class="p-2 sm:p-8">
+			{
+				!isHome && (
+					<a href={backUrl}>
+						<Button className=" group overflow-x-hidden">
+							<ArrowLeftIcon className="mr-1 h-4 w-4 transition-all group-focus:-translate-x-8 group-hover:-translate-x-2" />
+							Back
+						</Button>
+					</a>
+				)
+			}
 			<slot />
 		</div>
 	</body>
