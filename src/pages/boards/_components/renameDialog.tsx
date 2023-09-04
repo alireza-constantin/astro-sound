@@ -3,13 +3,32 @@ import { Input } from "@/components/ui";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { Pencil1Icon } from "@radix-ui/react-icons";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
-export function RenameDialog({ boardName }: { boardName: string }) {
+export function RenameDialog({ boardName, boardId }: { boardName: string, boardId: string }) {
     const nameRef = useRef<HTMLInputElement | null>(null)
-	function handleRename(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+	const [loading, setLoading] = useState(false)
+	async function handleRename(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+		if(!nameRef.current){
+			return
+		}
+		setLoading(true)
         e.preventDefault();
-        console.log(nameRef.current?.value)
+		// console.log(nameRef.current.value)
+        try {
+			await fetch(`/api/boards/${boardId}`, {
+				method: "PUT",
+				body: JSON.stringify({name: nameRef.current.value}),
+				headers: {
+					'content-type': 'application/json'
+				}
+			});
+			window.location.reload()
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
     }
 
 	return (
@@ -20,8 +39,8 @@ export function RenameDialog({ boardName }: { boardName: string }) {
 					<Pencil1Icon />
 				</DropdownMenuShortcut>
 			</AlertDialogTrigger>
-			<DialogContent handleAction={handleRename} title="Changing the board name">
-				<Input ref={nameRef} defaultValue={boardName} />
+			<DialogContent loading={loading} handleAction={handleRename} title="Changing the board name">
+				<Input required ref={nameRef} defaultValue={boardName} />
 			</DialogContent>
 		</AlertDialog>
 	);
