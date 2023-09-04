@@ -11,7 +11,7 @@ const date = createdAt.toISOString();
 const relativeTime = formatDistance(createdAt, new Date());
 ---
 
-<a href={`/boards/${id}`}>
+<a rel="prefetch" href={`/boards/${id}`}>
 	<Card className="p-4 h-full hover:border-gray-400">
 		<div class="flex items-center justify-between">
 			<CardTitle className="pb-4 text-xl">{name}</CardTitle>
