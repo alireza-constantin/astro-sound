@@ -4,6 +4,7 @@ import MainLayout from "@/layouts/MainLayout.astro";
 import { BoardMenu } from "./_components/boardMenu"
 import { NewSoundForm } from "./_components/newSoundForm";
 import { DeleteDialog } from "./_components/deleteDialog";
+import { RenameDialog } from "./_components/renameDialog";
 import { eq, sql } from "drizzle-orm";
 const { id } = Astro.params;
 if (!id) return;
@@ -21,6 +22,7 @@ console.log(soundsList);
 		<div class="ml-auto">
 			<BoardMenu client:load >
 				<DeleteDialog client:load />
+				<RenameDialog client:load />
 			</BoardMenu>
 		</div>
 		</div>

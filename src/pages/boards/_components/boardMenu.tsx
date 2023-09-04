@@ -26,10 +26,7 @@ export function BoardMenu({ children }: Props) {
 				<DropdownMenuLabel>Board Options</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem>
 						{children}
-						
-					</DropdownMenuItem>
 					<DropdownMenuItem>
 						Share
 						<DropdownMenuShortcut>
