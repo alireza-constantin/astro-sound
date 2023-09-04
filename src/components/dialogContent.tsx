@@ -8,15 +8,17 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/dialog";
 import type { ReactNode } from "react";
+import { LoadingButton } from "./ui/loadingButton";
 
 type Props = {
 	title: string;
 	description?: string;
 	handleAction: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-    children?: ReactNode
+    children?: ReactNode,
+	loading: boolean
 };
 
-export function DialogContent({ description, handleAction, title, children }: Props) {
+export function DialogContent({ description, handleAction, title, loading ,children }: Props) {
 	return (
 		<AlertDialogContent>
 			<AlertDialogHeader>
@@ -26,7 +28,11 @@ export function DialogContent({ description, handleAction, title, children }: Pr
             {children}
 			<AlertDialogFooter>
 				<AlertDialogCancel>Cancel</AlertDialogCancel>
-				<AlertDialogAction onClick={handleAction}>Continue</AlertDialogAction>
+				<AlertDialogAction disabled={loading} onClick={handleAction}>
+					<LoadingButton loading={loading} loadingText="deleting..." >
+						Continue
+					</LoadingButton>
+				</AlertDialogAction>
 			</AlertDialogFooter>
 		</AlertDialogContent>
 	);

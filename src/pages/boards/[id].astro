@@ -5,7 +5,7 @@ import { BoardMenu } from "./_components/boardMenu"
 import { NewSoundForm } from "./_components/newSoundForm";
 import { DeleteDialog } from "./_components/deleteDialog";
 import { RenameDialog } from "./_components/renameDialog";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 const { id } = Astro.params;
 if (!id) return;
 
@@ -17,15 +17,17 @@ console.log(soundsList);
 
 <MainLayout>
 	<div class="mx-auto max-w-5xl mt-10">
-		<div class="mb-8 flex">
+		<!-- handle this better -->
+		{!board && <h1>There isn't any board with id of {id}</h1>}
+		{board && <div class="mb-8 flex">
 		<h1 class="text-center flex-1 text-2xl font-semibold mb-8">{board.name}</h1>
 		<div class="ml-auto">
 			<BoardMenu client:load >
-				<DeleteDialog client:load />
+				<DeleteDialog boardId={board.id} client:load />
 				<RenameDialog boardName={board.name} client:load />
 			</BoardMenu>
 		</div>
 		</div>
 		<NewSoundForm soundList={soundsList} boardId={board.id} client:load />
-	</div>
+	</div>}
 </MainLayout>
