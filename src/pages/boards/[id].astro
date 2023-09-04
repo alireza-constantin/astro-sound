@@ -22,7 +22,7 @@ console.log(soundsList);
 		<div class="ml-auto">
 			<BoardMenu client:load >
 				<DeleteDialog client:load />
-				<RenameDialog client:load />
+				<RenameDialog boardName={board.name} client:load />
 			</BoardMenu>
 		</div>
 		</div>

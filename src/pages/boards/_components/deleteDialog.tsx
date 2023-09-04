@@ -1,36 +1,27 @@
+import { DialogContent } from "@/components/dialogContent";
 import {
 	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/dialog";
-import { DropdownMenuShortcut, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { TrashIcon } from "@radix-ui/react-icons";
 
 export function DeleteDialog() {
+	function handleDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>){
+		e.preventDefault()
+		e.stopPropagation();
+		console.log('hello');
+	}
+	
 	return (
 		<AlertDialog>
-			<AlertDialogTrigger className="relative hover:bg-accent w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+			<AlertDialogTrigger className="relative hover:bg-accent w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
 				<span>Delete</span>
 				<DropdownMenuShortcut>
 					<TrashIcon />
 				</DropdownMenuShortcut>
 			</AlertDialogTrigger>
-			<AlertDialogContent>
-				<AlertDialogHeader>
-					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-					<AlertDialogDescription></AlertDialogDescription>
-				</AlertDialogHeader>
-				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction>Continue</AlertDialogAction>
-				</AlertDialogFooter>
-			</AlertDialogContent>
+			<DialogContent title="Are you sure?" handleAction={handleDelete} description="By deleting the board all the data and sounds be lost" />
 		</AlertDialog>
 	);
 }
