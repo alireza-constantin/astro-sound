@@ -8,9 +8,11 @@ export function CreateBoard() {
 
 	async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		if(e.currentTarget.checkValidity()){
+		console.log('test')
+		if(!e.currentTarget.checkValidity()){
 			return;
 		}
+		console.log(e.currentTarget.checkValidity());
 		setLoading(true);
 		const formData = new FormData(e.currentTarget);
 		try {

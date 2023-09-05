@@ -3,10 +3,8 @@ import { db, boards, sounds, type Sound } from "@/db/schema";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { BoardMenu } from "./_components/boardMenu"
 import { NewSoundForm } from "./_components/newSoundForm";
-import { DeleteDialog } from "./_components/deleteDialog";
-import { RenameDialog } from "./_components/renameDialog";
 import { eq } from "drizzle-orm";
-import { ObsDialog } from "./_components/obsD";
+import { NewBoardMenu } from "./_components/obsD";
 const { id } = Astro.params;
 if (!id) return;
 
@@ -27,11 +25,11 @@ const soundsList = await db.select().from(sounds).where(eq(sounds.boardId, id))
 		{board && <div class="mb-8 flex">
 		<h1 class="text-center flex-1 text-2xl font-semibold mb-8">{board.name}</h1>
 		<div class="ml-auto">
-			<BoardMenu url={url} client:load >				
+			<BoardMenu boardId={board.id} boardName={board.name} client:load >				
 			</BoardMenu>
 		</div>
 		</div>
 		<NewSoundForm soundList={soundsList} boardId={board.id} client:load />
 	</div>}
-	<ObsDialog client:load />
+	<NewBoardMenu client:load />
 </MainLayout>

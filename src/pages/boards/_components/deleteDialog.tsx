@@ -1,4 +1,3 @@
-import { DialogContent } from "@/components/dialogContent";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { TrashIcon } from "@radix-ui/react-icons";
@@ -29,12 +28,6 @@ export function DeleteDialog({ boardId }: { boardId: string }) {
 					<TrashIcon />
 				</DropdownMenuShortcut>
 			</AlertDialogTrigger>
-			<DialogContent
-				loading={loading}
-				title="Are you sure?"
-				handleAction={handleDelete}
-				description="By deleting the board all the data and sounds will be lost"
-			/>
 		</AlertDialog>
 	);
 }

@@ -11,7 +11,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { ReactNode } from "react";
-import type { OpenDialogEventDetail } from "@/utils/type";
 import { createAndDispatchEvent } from "@/utils/helpers";
 
 type Props = {
@@ -19,27 +18,29 @@ type Props = {
 	url: string;
 };
 
-export function BoardMenu({ children, url }: Props) {
-	async function handleDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-		// setLoading(true);
-		// e.preventDefault();
-		// try {
-		// 	await fetch(`/api/boards/asdads`, {
-		// 		method: "DELETE",
-		// 	});
-		// 	window.location.pathname = "/boards";
-		// } catch (error) {
-		// 	console.log(error);
-		// } finally {
-		// 	// setLoading(false);
-		// }
-		console.log("deleted");
-	}
-
-	function handleShareCopy(e: React.MouseEvent<HTMLDivElement>) {
+export function BoardMenu({ boardId, boardName }: { boardId: string; boardName: string }) {
+	function handleDelete() {
 		createAndDispatchEvent({
 			eventName: "open",
-			detail: { title: "Are you sure", description: "delete some shit", type: "delete" },
+			detail: {
+				title: "Are you sure",
+				description: "delete some shit",
+				type: "delete",
+				boardId,
+			},
+		});
+	}
+
+	function handleRename() {
+		createAndDispatchEvent({
+			eventName: "open",
+			detail: {
+				title: "Change board name",
+				description: "",
+				type: "rename",
+				boardId,
+				boardName,
+			},
 		});
 	}
 
@@ -52,19 +53,19 @@ export function BoardMenu({ children, url }: Props) {
 				<DropdownMenuLabel>Board Options</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem onClick={handleShareCopy}>
+					<DropdownMenuItem onClick={handleDelete}>
 						Delete
 						<DropdownMenuShortcut>
 							<TrashIcon />
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
-					<DropdownMenuItem onClick={handleShareCopy}>
+					<DropdownMenuItem onClick={handleRename}>
 						Rename
 						<DropdownMenuShortcut>
 							<Pencil1Icon />
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
-					<DropdownMenuItem onClick={handleShareCopy}>
+					<DropdownMenuItem onClick={() => {}}>
 						Share
 						<DropdownMenuShortcut>
 							<Share1Icon />

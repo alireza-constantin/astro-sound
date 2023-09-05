@@ -1,4 +1,3 @@
-import { DialogContent } from "@/components/dialogContent";
 import { Input } from "@/components/ui";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
@@ -39,9 +38,6 @@ export function RenameDialog({ boardName, boardId }: { boardName: string, boardI
 					<Pencil1Icon />
 				</DropdownMenuShortcut>
 			</AlertDialogTrigger>
-			<DialogContent loading={loading} handleAction={handleRename} title="Changing the board name">
-				<Input required ref={nameRef} defaultValue={boardName} />
-			</DialogContent>
 		</AlertDialog>
 	);
 }
