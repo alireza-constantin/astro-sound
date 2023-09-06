@@ -13,9 +13,9 @@ import {
 import { LoadingButton } from "@/components/ui/loadingButton";
 import type { OpenDialogEventDetail, ActionTypes } from "@/utils/type";
 import { useEffect, useRef, useState } from "react";
-import { handleDelete, handleRename } from "@/utils/api";
+import { handleDelete, handleRename } from "../_utils/services";
 
-export function NewBoardMenu() {
+export function Modal() {
 	const nameRef = useRef<HTMLInputElement | null>(null);
 	const triggerRef = useRef<HTMLButtonElement | null>(null);
 	const [dialogDetails, setDialogDetails] = useState({

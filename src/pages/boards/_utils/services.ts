@@ -1,12 +1,12 @@
+import { deleteBoard, renameBoard } from "@/utils/apis";
+
 export async function handleDelete(
 	setLoading: React.Dispatch<React.SetStateAction<boolean>>,
 	boardId: string,
 ) {
 	setLoading(true);
 	try {
-		await fetch(`/api/boards/${boardId}`, {
-			method: "DELETE",
-		});
+		await deleteBoard(boardId);
 		window.location.pathname = "/boards";
 	} catch (error) {
 		console.log(error);
@@ -25,13 +25,7 @@ export async function handleRename(
 	}
 	setLoading(true);
 	try {
-		await fetch(`/api/boards/${boardId}`, {
-			method: "PUT",
-			body: JSON.stringify({ name: nameRef.current.value }),
-			headers: {
-				"content-type": "application/json",
-			},
-		});
+		await renameBoard(boardId, nameRef.current.value);
 		window.location.reload();
 	} catch (error) {
 		console.log(error);
