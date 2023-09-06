@@ -25,7 +25,7 @@ const soundsList = await db.select().from(sounds).where(eq(sounds.boardId, id))
 		{board && <div class="mb-8 flex">
 		<h1 class="text-center flex-1 text-2xl font-semibold mb-8">{board.name}</h1>
 		<div class="ml-auto">
-			<BoardMenu boardId={board.id} boardName={board.name} client:load >				
+			<BoardMenu url={url} boardId={board.id} boardName={board.name} client:load >				
 			</BoardMenu>
 		</div>
 		</div>

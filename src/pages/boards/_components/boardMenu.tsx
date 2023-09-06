@@ -10,40 +10,58 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { ReactNode } from "react";
 import { createAndDispatchEvent } from "@/utils/helpers";
 
 type Props = {
-	children: ReactNode;
+	boardId: string;
+	boardName: string;
 	url: string;
 };
 
-export function BoardMenu({ boardId, boardName }: { boardId: string; boardName: string }) {
-	function handleDelete() {
-		createAndDispatchEvent({
-			eventName: "open",
-			detail: {
-				title: "Are you sure",
-				description: "delete some shit",
-				type: "delete",
-				boardId,
-			},
-		});
-	}
 
-	function handleRename() {
-		createAndDispatchEvent({
-			eventName: "open",
-			detail: {
-				title: "Change board name",
-				description: "",
-				type: "rename",
-				boardId,
-				boardName,
-			},
-		});
-	}
+export function BoardMenu({ boardId, boardName, url }: Props) {
+	
+	
 
+	// function handleRename() {
+	// 	createAndDispatchEvent({
+	// 		eventName: "open",
+	// 		detail: {
+	// 			title: "Change the board name",
+	// 			description: "",
+	// 			type: "rename",
+	// 			boardId,
+	// 			boardName,
+	// 		},
+	// 	});
+	// }
+
+	// function handleShare() {
+	// 	console.log(url);
+	// }
+	
+	const actions = createAction({ boardId, boardName, url })
+
+
+	const MenuItems = [
+		{
+			name: "delete",
+			action: actions.delete,
+			icon: <TrashIcon />,
+		},
+		{
+			name: "rename",
+			action: actions.reaname,
+			icon: <Pencil1Icon />,
+		},
+		{
+			name: "share",
+			action: actions.share,
+			icon: <TrashIcon />,
+		},
+	];
+
+	
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="border-none" asChild>
@@ -53,26 +71,53 @@ export function BoardMenu({ boardId, boardName }: { boardId: string; boardName: 
 				<DropdownMenuLabel>Board Options</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem onClick={handleDelete}>
-						Delete
-						<DropdownMenuShortcut>
-							<TrashIcon />
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
-					<DropdownMenuItem onClick={handleRename}>
-						Rename
-						<DropdownMenuShortcut>
-							<Pencil1Icon />
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => {}}>
-						Share
-						<DropdownMenuShortcut>
-							<Share1Icon />
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
+					{MenuItems.map((item) => (
+						<DropdownMenuItem onClick={item.action} key={item.name} className="capitalize">
+								{item.name}
+							<DropdownMenuShortcut>
+								{item.icon}
+							</DropdownMenuShortcut>
+						</DropdownMenuItem>
+					))}
 				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
+}
+
+type CreateActionProps = {
+	boardId: string;
+	boardName: string;
+	url: string
+}
+
+function createAction({ boardId, boardName, url }: CreateActionProps){
+	return {
+		delete: () => {
+			createAndDispatchEvent({
+				eventName: "open",
+				detail: {
+					title: "Are you sure?",
+					description: "By deleting board all the sounds will be lost too",
+					type: "delete",
+					boardId,
+				},
+			});
+		},
+		reaname: () => {
+			createAndDispatchEvent({
+				eventName: "open",
+				detail: {
+					title: "Change the board name",
+					description: "",
+					type: "rename",
+					boardId,
+					boardName,
+				},
+			});
+		},
+		share: () => {
+			console.log(url)
+		}
+	};
 }
