@@ -1,19 +1,15 @@
 ---
-import { db, boards, sounds, type Sound } from "@/db/schema";
+import { db, boards, sounds } from "@/db/schema";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { BoardMenu } from "./_components/boardMenu"
 import { NewSoundForm } from "./_components/newSoundForm";
 import { eq } from "drizzle-orm";
-import { NewBoardMenu } from "./_components/obsD";
+import { BoardModal } from "./_components/boardModal";
 const { id } = Astro.params;
 if (!id) return;
 
 const url = new URL(id, Astro.url).href;
 
-// <DeleteDialog boardId={board.id} client:load />
-				// <nameDialog boardId={board.id} boardName={board.name} client:load />
-
-// boardId:
 const board = (await db.select().from(boards).where(eq(boards.id, id)))[0];
 const soundsList = await db.select().from(sounds).where(eq(sounds.boardId, id))
 ---
@@ -31,5 +27,5 @@ const soundsList = await db.select().from(sounds).where(eq(sounds.boardId, id))
 		</div>
 		<NewSoundForm soundList={soundsList} boardId={board.id} client:load />
 	</div>}
-	<NewBoardMenu client:load />
+	<BoardModal client:load />
 </MainLayout>
