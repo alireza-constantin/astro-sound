@@ -1,4 +1,4 @@
-import { boards, db } from "@/db/schema";
+import { boards, db, sounds } from "@/db/schema";
 import type { APIRoute } from "astro";
 import { eq } from "drizzle-orm";
 
