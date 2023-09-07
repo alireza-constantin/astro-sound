@@ -34,7 +34,7 @@ export function Sounds({ boardId }: Props) {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 		const data = Object.fromEntries(formData.entries()) as Sound;
-		setLoading(true)
+		setLoading(true);
 		async function newSound() {
 			const res = await fetch(`/api/sounds/${boardId}`, {
 				method: "POST",
@@ -60,11 +60,10 @@ export function Sounds({ boardId }: Props) {
 				},
 			],
 			rollbackOnError: true,
-			populateCache: (added, current) => [...current || [], added],
+			populateCache: (added, current) => [...(current || []), added],
 			revalidate: false,
 		});
 
-		
 		setLoading(false);
 	}
 
@@ -95,9 +94,11 @@ export function Sounds({ boardId }: Props) {
 					>
 						{url}
 					</p>
-					<time className="text-xs text-gray-500" dateTime={createdAt}>
-						created {formatDistance(new Date(createdAt), new Date())}
-					</time>
+					{createdAt && (
+						<time className="text-xs text-gray-500" dateTime={createdAt}>
+							created {formatDistance(new Date(createdAt), new Date())}
+						</time>
+					)}
 				</SoundCard>
 			))}
 			{soundForm.map(({ id, createdAt }) => (
