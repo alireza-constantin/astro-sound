@@ -12,6 +12,7 @@ import {
 import type { ReactNode } from "react";
 import { LoadingButton } from "./ui/loadingButton";
 import { forwardRef } from "react";
+import clsx from "clsx";
 
 type ModalProps = {
 	title: string;
@@ -20,10 +21,16 @@ type ModalProps = {
 	isLoading: boolean;
 	loadingText: string;
 	handleAction: () => Promise<void>;
+	variant?: string;
 };
 
 export const Modal = forwardRef<HTMLButtonElement, ModalProps>(
-	({ desc, handleAction, isLoading, loadingText, title, children }, ref) => {
+	({ desc, handleAction, isLoading, loadingText, title, children, variant }, ref) => {
+		const variants: {
+			[variant: string]: string
+		} = {
+			'danger': 'bg-red-500 text-white'
+		}
 		return (
 			<AlertDialog>
 				<AlertDialogTrigger

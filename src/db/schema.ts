@@ -13,6 +13,7 @@ export const boards = pgTable("board", {
 
 export const sounds = pgTable("sound", {
 	id: uuid("id").primaryKey().$default(() => uuidv4()),
+	name: text('name').notNull(),
 	url: text("url").notNull(),
 	boardId: uuid("board_id").references(() => boards.id, { onDelete: 'cascade' }),
 	createdAt: timestamp("createdAt").defaultNow().notNull(),
