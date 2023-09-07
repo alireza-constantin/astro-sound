@@ -32,9 +32,9 @@ export const POST: APIRoute = async ({ request, params }) => {
 	// // todo: add try catch for validation and handling errors
 	try {
 		console.log(raw);
-		await db.insert(sounds).values({...raw, boardId});
-		const soundList = await db.select().from(sounds).where(eq(sounds.boardId, boardId));
-		return new Response(JSON.stringify(soundList));
+		const soundList = await db.insert(sounds).values({...raw, boardId}).returning();
+		// const soundList = await db.select().from(sounds).where(eq(sounds.boardId, boardId));
+		return new Response(JSON.stringify(soundList[0]));
 	} catch (error) {
 		console.log(error);
 		return new Response(JSON.stringify({ msg: "handle error" }), { status: 400 });

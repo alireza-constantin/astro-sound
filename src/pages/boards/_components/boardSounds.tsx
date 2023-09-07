@@ -60,7 +60,7 @@ export function Sounds({ boardId }: Props) {
 				},
 			],
 			rollbackOnError: true,
-			populateCache: true,
+			populateCache: (added, current) => [...current || [], added],
 			revalidate: false,
 		});
 
