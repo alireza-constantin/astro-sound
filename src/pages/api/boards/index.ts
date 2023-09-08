@@ -2,12 +2,10 @@ import { boards, db } from "@/db/schema";
 import { formatZodErrors } from "@/pages/boards/_utils/serverHelper";
 import type { APIRoute } from "astro";
 import { z, ZodError } from "zod";
+import { DrizzleError } from "drizzle-orm";
 
 const payload = z.object({
 	name: z.string(),
-	url: z.string().url({ message: 'invalid url format' }),
-	issue: z.string().startsWith("te"),
-	text: z.string().min(2, { message: 'text can not be less than 2 character' })
 });
 
 export const POST: APIRoute = async ({ request }) => {
@@ -18,12 +16,23 @@ export const POST: APIRoute = async ({ request }) => {
 		const { name } = payload.parse(data);
 		const [board] = await db.insert(boards).values({ name }).returning();
 		return new Response(JSON.stringify({ boardId: board.id }));
-
 	} catch (e) {
-		if(e instanceof ZodError){
+		if (e instanceof ZodError) {
 			const error = formatZodErrors(e);
-			return new Response(JSON.stringify({ msg: "validation error", error }), { status: 403 });
+			return new Response(JSON.stringify({ msg: "validation error", error }), {
+				status: 403,
+			});
 		}
-		return new Response(JSON.stringify({ msg: "handle error" }), { status: 400 });
+
+		if (e instanceof DrizzleError) {
+			return new Response(JSON.stringify({ msg: "Database error", error: e }), {
+				status: 403,
+			});
+		}
+
+		console.log(e);
+		return new Response(JSON.stringify({ msg: "something went wrong", error: e }), {
+			status: 500,
+		});
 	}
 };
