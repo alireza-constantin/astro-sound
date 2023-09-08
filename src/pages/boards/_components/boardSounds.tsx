@@ -21,7 +21,7 @@ export function Sounds({ boardId }: Props) {
 		error,
 		isLoading,
 		mutate,
-	} = useSWR<Array<Sound>>(`/api/sounds/${boardId}`, fetcher);
+	} = useSWR<Array<Sound>>(`/api/boards/${boardId}`, fetcher);
 
 	if (error) return <div>failed to load</div>;
 	if (isLoading) return <div>loading...</div>;

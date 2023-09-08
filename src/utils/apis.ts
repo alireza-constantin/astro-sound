@@ -1,4 +1,13 @@
+import type { Board, Sound } from "@/db/schema";
 import type { CreateSoundProps } from "./type";
+
+export async function createBoard(formData: FormData): Promise<Board> {
+	return fetch("/api/boards", {
+		body: formData,
+		method: "POST",
+	}).then((res) => res.json());
+}
+
 
 export function deleteBoard(boardId: string){
     return fetch(`/api/boards/${boardId}`, {
@@ -16,10 +25,10 @@ export function renameBoard(boardId: string, name: string){
 	});
 }
 
-export async function createSound(boardId: string, body: CreateSoundProps){
-	return fetch(`/api/sounds/${boardId}`, {
+export async function createSound(boardId: string, body: CreateSoundProps): Promise<Sound>{
+	return fetch(`/api/sounds`, {
 		method: "POST",
-		body: JSON.stringify(body),
+		body: JSON.stringify({...body, boardId}),
 		headers: {
 			"content-type": "application/json",
 		},

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui";
 import { Card } from "@/components/ui/card";
+import { createBoard } from "@/utils/apis";
 import { PlusIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
@@ -8,19 +9,15 @@ export function CreateBoard() {
 
 	async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		console.log('test')
-		if(!e.currentTarget.checkValidity()){
+		if (!e.currentTarget.checkValidity()) {
+			(e.currentTarget.querySelector('#name') as HTMLInputElement)?.focus()
 			return;
 		}
-		console.log(e.currentTarget.checkValidity());
 		setLoading(true);
 		const formData = new FormData(e.currentTarget);
 		try {
-			const res = await fetch("/api/boards/new", {
-				body: formData,
-				method: "POST",
-			}).then((res) => res.json());
-			window.location.pathname = `/boards/${res.boardId}`;
+			const res = await createBoard(formData);
+			// window.location.pathname = `/boards/${res.id}`;
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -35,6 +32,7 @@ export function CreateBoard() {
 					<input
 						className="bg-transparent peer mb-1 font-semibold aria-checked:invalid:border-b-rose-500 aria-checked:focus:invalid:border-b-rose-500 placeholder:font-normal placeholder:text-neutral-700 pb-1 transition-colors duration-100 border-b-[1px] border-transparent focus:border-neutral-800 focus:outline-none w-full"
 						placeholder="Board Name"
+						id="name"
 						name="name"
 						aria-checked="false"
 						type="text"
@@ -42,12 +40,12 @@ export function CreateBoard() {
 						autoComplete="off"
 						required
 						onFocus={(e) => {
-							if(e.currentTarget.getAttribute('aria-checked') === 'true') return;
-							e.currentTarget.setAttribute("aria-checked", "true")
+							if (e.currentTarget.getAttribute("aria-checked") === "true") return;
+							e.currentTarget.setAttribute("aria-checked", "true");
 						}}
 					/>
 					<span className="text-[10px] hidden peer-aria-checked:peer-invalid:block text-rose-500">
-						* white spaces not allowed
+						* name is required | white spaces not allowed
 					</span>
 				</div>
 				<Button disabled={loading} type="submit" className="w-full">

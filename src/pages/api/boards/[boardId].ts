@@ -33,3 +33,19 @@ export const PUT: APIRoute = async({ params, request }) => {
 		return new Response(JSON.stringify({ msg: "handle error" }), { status: 400 });
 	}
 }
+
+// get all the sounds of boards
+export const GET: APIRoute = async ({ params }) => {
+	const { boardId } = params;
+	if (!boardId) {
+		return new Response(JSON.stringify({ msg: "please provide a board id" }), { status: 400 });
+	}
+
+	try {
+		const soundList = await db.select().from(sounds).where(eq(sounds.boardId, boardId));
+		return new Response(JSON.stringify(soundList));
+	} catch (error) {
+		console.log(error);
+		return new Response(JSON.stringify({ msg: "handle error" }), { status: 400 });
+	}
+};
