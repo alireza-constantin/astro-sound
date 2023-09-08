@@ -5,7 +5,7 @@ import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import useSWR from "swr";
 import { fetcher } from "../_utils/helpers";
 import { formatDistance } from "date-fns";
-import { createSound, deleteSound } from "@/utils/apis";
+import { createSound, deleteSound, updateSoundName } from "@/utils/apis";
 import { CreateSoundSchema } from "@/utils/type";
 
 type Sound = {
@@ -75,6 +75,33 @@ export function Sounds({ boardId }: Props) {
 		});
 	}
 
+	async function handleUpdate(id: string, name: string) {
+		await mutate(updateSoundName(id, name), {
+			optimisticData: (currentSounds) => {
+				return (currentSounds || []).map((sound) => {
+					if(sound.id === id){
+						const newSound = {...sound}
+						newSound.name = name;
+						return newSound
+					}
+					return sound
+				});
+			},
+			populateCache: (updatedSound, currentSounds) => {
+				return (currentSounds || []).map((sound) => {
+					if (sound.id === id) {
+						const newSound = { ...sound };
+						newSound.name = updatedSound.name;
+						return newSound;
+					}
+					return sound;
+				});
+			},
+			rollbackOnError: true,
+			revalidate: false,
+		});
+	}
+
 	if (error) return <div>failed to load</div>;
 	if (isLoading) return <div>loading...</div>;
 
@@ -94,6 +121,7 @@ export function Sounds({ boardId }: Props) {
 								if (e.currentTarget.getAttribute("aria-checked") === "true") return;
 								e.currentTarget.setAttribute("aria-checked", "true");
 							}}
+							onBlur={e => handleUpdate(id, e.currentTarget.value)}
 						/>
 						<span onClick={() => handleDelete(id)} className="cursor-pointer">
 							<TrashIcon className="h-5 w-5 hover:text-rose-500" />

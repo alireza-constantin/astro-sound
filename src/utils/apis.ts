@@ -29,7 +29,7 @@ export async function createSound(boardId: string, body: CreateSoundProps){
 export async function updateSoundName(soundId: string, soundName: string) {
 	return fetch(`/api/sounds/${soundId}`, {
 		method: "PUT",
-		body: JSON.stringify(soundName),
+		body: JSON.stringify({name: soundName}),
 		headers: {
 			"content-type": "application/json",
 		},
