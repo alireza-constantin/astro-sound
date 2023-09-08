@@ -31,9 +31,8 @@ export function Sounds({ boardId }: Props) {
 		mutate,
 	} = useSWR<Array<Sound>>(`/api/sounds/${boardId}`, fetcher);
 	const [soundForm, setSoundForm] = useState<Array<{ id: string }>>([]);
-	const [loading, setLoading] = useState(false);
 
-	async function soundSubmitHandler(e: React.FormEvent<HTMLFormElement>) {
+	async function soundSubmitHandler(e: React.FormEvent<HTMLFormElement>, id: string) {
 		e.preventDefault();
 		// check to see if the form state is valid
 		if (!e.currentTarget.checkValidity()) return;
@@ -41,29 +40,25 @@ export function Sounds({ boardId }: Props) {
 
 		const formData = new FormData(e.currentTarget);
 		const data = CreateSoundSchema.parse(Object.fromEntries(formData.entries()));
-		setLoading(true);
-
-		// await mutate(createSound(boardId, data), {
-		// 	optimisticData: [
-		// 		...(sounds || []),
-		// 		{
-		// 			...data,
-		// 			// add this properties to get rid of the typescript error
-		// 			id: "",
-		// 			createdAt: "",
-		// 			boardId
-		// 		},
-		// 	],
-		// 	rollbackOnError: true,
-		// 	populateCache: (added, current) => [...(current || []), added],
-		// 	revalidate: false,
-		// });
-
-		const formId = e.currentTarget.getAttribute("id");
 		setSoundForm((prev) => {
-			return prev.filter((p) => p.id !== formId);
+			return prev.filter((p) => p.id !== id);
 		});
-		setLoading(false);
+	
+		await mutate(createSound(boardId, data), {
+			optimisticData: [
+				...(sounds || []),
+				{
+					...data,
+					// add this properties to get rid of the typescript error
+					id: "",
+					createdAt: "",
+					boardId
+				},
+			],
+			rollbackOnError: true,
+			populateCache: (added, current) => [...(current || []), added],
+			revalidate: false,
+		});
 	}
 
 	if (error) return <div>failed to load</div>;
@@ -100,12 +95,12 @@ export function Sounds({ boardId }: Props) {
 				</SoundCard>
 			))}
 			{soundForm.map(({ id }) => (
-				<form className="" onSubmit={soundSubmitHandler} id={id} noValidate key={id}>
+				<form className="" onSubmit={(e) => soundSubmitHandler(e, id)} noValidate key={id}>
 					<SoundCard>
 						<FormInput name="name" placeholder="name" type="text" />
 						<FormInput name="url" placeholder="url" type="url" />
 						<input type="hidden" name="id" value={id} />
-						<Button disabled={loading} className="w-full" type="submit">
+						<Button className="w-full" type="submit">
 							Submit
 						</Button>
 					</SoundCard>
@@ -138,7 +133,7 @@ type SoundProps = {
 
 function SoundCard(props: SoundProps) {
 	return (
-		<Card className="p-4 h-full animate-appear-down">
+		<Card className="p-4 h-full">
 			<CardContent className="p-0 space-y-3">{props.children}</CardContent>
 		</Card>
 	);
