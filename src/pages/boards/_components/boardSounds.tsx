@@ -3,9 +3,12 @@ import { useState, type ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { v4 as uuidv4 } from "uuid";
-import useSWR from "swr";
+import useSWR, { type MutatorCallback } from "swr";
 import { fetcher } from "../_utils/helpers";
 import { formatDistance } from "date-fns";
+import { createSound } from "@/utils/apis";
+import { CreateSoundSchema, type CreateSoundProps } from "@/utils/type";
+import { z } from "zod";
 
 type Sound = {
 	url: string;
@@ -27,49 +30,44 @@ export function Sounds({ boardId }: Props) {
 		isLoading,
 		mutate,
 	} = useSWR<Array<Sound>>(`/api/sounds/${boardId}`, fetcher);
-	const [soundForm, setSoundForm] = useState<Array<Sound>>([]);
+	const [soundForm, setSoundForm] = useState<Array<{ id: string }>>([]);
 	const [loading, setLoading] = useState(false);
 
 	async function soundSubmitHandler(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		const formData = new FormData(e.currentTarget);
-		const data = Object.fromEntries(formData.entries()) as Sound;
-		setLoading(true);
-		async function newSound() {
-			const res = await fetch(`/api/sounds/${boardId}`, {
-				method: "POST",
-				body: JSON.stringify(data),
-				headers: {
-					"content-type": "application/json",
-				},
-			}).then((res) => res.json());
-			return res;
-		}
-		if (!sounds) return;
-		// console.log("old sounds", oldSounds);
-		setSoundForm((prev) => {
-			return prev.filter((p) => p.id !== data.id);
-		});
-		console.log("new Data", data);
-		await mutate(newSound(), {
-			optimisticData: [
-				...sounds,
-				{
-					...data,
-					boardId,
-				},
-			],
-			rollbackOnError: true,
-			populateCache: (added, current) => [...(current || []), added],
-			revalidate: false,
-		});
+		// check to see if the form state is valid
+		if (!e.currentTarget.checkValidity()) return;
+		// parse the form data to get our data from it
 
+		const formData = new FormData(e.currentTarget);
+		const data = CreateSoundSchema.parse(Object.fromEntries(formData.entries()));
+		setLoading(true);
+
+		// await mutate(createSound(boardId, data), {
+		// 	optimisticData: [
+		// 		...(sounds || []),
+		// 		{
+		// 			...data,
+		// 			// add this properties to get rid of the typescript error
+		// 			id: "",
+		// 			createdAt: "",
+		// 			boardId
+		// 		},
+		// 	],
+		// 	rollbackOnError: true,
+		// 	populateCache: (added, current) => [...(current || []), added],
+		// 	revalidate: false,
+		// });
+
+		const formId = e.currentTarget.getAttribute("id");
+		setSoundForm((prev) => {
+			return prev.filter((p) => p.id !== formId);
+		});
 		setLoading(false);
 	}
 
 	if (error) return <div>failed to load</div>;
 	if (isLoading) return <div>loading...</div>;
-	console.log("sounds", sounds);
 
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 mb-4">
@@ -101,13 +99,12 @@ export function Sounds({ boardId }: Props) {
 					)}
 				</SoundCard>
 			))}
-			{soundForm.map(({ id, createdAt }) => (
-				<form onSubmit={soundSubmitHandler} noValidate key={id}>
+			{soundForm.map(({ id }) => (
+				<form className="" onSubmit={soundSubmitHandler} id={id} noValidate key={id}>
 					<SoundCard>
 						<FormInput name="name" placeholder="name" type="text" />
 						<FormInput name="url" placeholder="url" type="url" />
 						<input type="hidden" name="id" value={id} />
-						<input type="hidden" name="createdAt" value={createdAt} />
 						<Button disabled={loading} className="w-full" type="submit">
 							Submit
 						</Button>
@@ -123,11 +120,7 @@ export function Sounds({ boardId }: Props) {
 					setSoundForm((prevSound) => [
 						...prevSound,
 						{
-							id: uuidv4(),
-							url: "",
-							name: "",
-							createdAt: new Date().toISOString(),
-							boardId: "",
+							id: String(Math.random()),
 						},
 					])
 				}
@@ -145,7 +138,7 @@ type SoundProps = {
 
 function SoundCard(props: SoundProps) {
 	return (
-		<Card className="p-4 h-full">
+		<Card className="p-4 h-full animate-appear-down">
 			<CardContent className="p-0 space-y-3">{props.children}</CardContent>
 		</Card>
 	);

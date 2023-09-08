@@ -1,3 +1,6 @@
+import type { Sound } from "@/db/schema";
+import { z } from "zod";
+
 export type EventProps = {
 	eventName: string;
 };
@@ -11,3 +14,9 @@ export type OpenDialogEventDetail = {
     boardId: string;
     boardName?: string;
 };
+
+export const CreateSoundSchema = z.object({
+	name: z.string().min(1),
+	url: z.string().url(),
+})
+export type CreateSoundProps = z.infer<typeof CreateSoundSchema>;
