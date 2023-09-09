@@ -14,14 +14,23 @@ export function deleteBoard(boardId: string) {
 	});
 }
 
-export function renameBoard(boardId: string, name: string) {
+export async function renameBoard(boardId: string, name: string) {
 	return fetch(`/api/boards/${boardId}`, {
 		method: "PUT",
 		body: JSON.stringify({ name }),
 		headers: {
 			"content-type": "application/json",
 		},
-	});
+	})
+		.then((res) => {
+			if (!res.ok) {
+				throw new Error(JSON.stringify(res.json()));
+			}
+			res;
+		})
+		.catch((e) => {
+			throw new Error(e);
+		});
 }
 
 export async function createSound(boardId: string, body: CreateSoundProps): Promise<Sound> {
@@ -35,13 +44,19 @@ export async function createSound(boardId: string, body: CreateSoundProps): Prom
 }
 
 export async function updateSoundName(soundId: string, soundName: string) {
-	return fetch(`/api/sounds/${soundId}`, {
+	const res = await fetch(`/api/sounds/${soundId}`, {
 		method: "PUT",
 		body: JSON.stringify({ name: soundName }),
 		headers: {
 			"content-type": "application/json",
 		},
-	}).then((res) => res.json());
+	});
+	const data = await res.json();
+
+	if (!res.ok) {
+		throw new Error(data);
+	}
+	return data;
 }
 
 export async function deleteSound(soundId: string) {

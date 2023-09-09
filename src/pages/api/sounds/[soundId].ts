@@ -35,10 +35,13 @@ export const DELETE: APIRoute = async ({ params }) => {
 			status: 500,
 		});
 	}
+
+	
 };
 
+const notEmpty = z.string().trim().min(1, {  message: 'Required' })
 const updatePayload = z.object({
-	name: z.string(),
+	name: z.string().pipe(notEmpty),
 });
 // update the sound name
 // @route   api/sounds/:soundId
@@ -50,7 +53,6 @@ export const PUT: APIRoute = async ({ params, request }) => {
 	if (!soundId) {
 		return new Response(JSON.stringify({ msg: "please provide a board id" }), { status: 400 });
 	}
-	// todo: add try catch for validation and handling errors
 	try {
 		const { name } = updatePayload.parse(await request.json());
 		const sound = await db
