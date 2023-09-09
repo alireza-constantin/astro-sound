@@ -24,3 +24,5 @@ export type CreateSoundProps = z.infer<typeof CreateSoundSchema>;
 export type ClientSound = {
 	[K in keyof Sound]: K extends 'createdAt' ? string : Sound[K] 
 }
+
+export const notEmpty = z.string().trim().min(1, { message: "Required" });

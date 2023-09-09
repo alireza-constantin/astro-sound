@@ -5,29 +5,26 @@ import { SoundCard } from "./soundCard";
 import type { Sound } from "@/db/schema";
 import { useState } from "react";
 
-
 export type AddNewSoundProps = {
 	sounds: Sound[] | undefined;
-	onDelete: (s: any) => void
+	onDelete: (s: any) => void;
 };
 
 export function SoundItems({ onDelete, sounds }: AddNewSoundProps) {
 	async function handleDelete(id: string) {
-		await deleteSound(id)
+		await deleteSound(id);
 		onDelete(id);
 	}
 
-
 	async function handleUpdate(id: string, e: React.FocusEvent<HTMLInputElement, Element>) {
-		if(e.target.value.trim() === "") return;
-		
+		const name = e.currentTarget.value.trim();
+		if (name === "") return;
+
 		try {
-			await updateSoundName(id, e.currentTarget.value)
-			console.log('this should not be here')
+			await updateSoundName(id, name);
 		} catch (error) {
 			// show toast or error outside input field
-			e.target.value = e.target.defaultValue; 
-			
+			e.target.value = e.target.defaultValue;
 		}
 	}
 
@@ -42,7 +39,7 @@ export function SoundItems({ onDelete, sounds }: AddNewSoundProps) {
 								defaultValue={name}
 								type="text"
 								placeholder="Name"
-								pattern="^(?!\s*$)\S.*$"
+								pattern="^(?!\s+$).+"
 								required
 								aria-checked="false"
 								onInput={(e) => e.currentTarget.defaultValue}

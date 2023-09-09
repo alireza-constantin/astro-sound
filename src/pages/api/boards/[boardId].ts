@@ -1,5 +1,6 @@
 import { boards, db, sounds } from "@/db/schema";
 import { formatZodErrors } from "@/pages/boards/_utils/serverHelper";
+import { notEmpty } from "@/utils/type";
 import type { APIRoute } from "astro";
 import { DrizzleError, eq } from "drizzle-orm";
 import { ZodError, z } from "zod";
@@ -38,9 +39,8 @@ export const DELETE: APIRoute = async ({ params }) => {
 		});
 	}
 };
-
 const putPayload = z.object({
-	name: z.string()
+	name: z.string().pipe(notEmpty)
 })
 
 // update a board name
@@ -55,7 +55,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
 
 	try {
 		const { name } = putPayload.parse(await request.json())
-		await db.update(boards).set({ name }).where(eq(boards.id, boardId));
+		await db.update(boards).set({ name: name.trim() }).where(eq(boards.id, boardId));
 		return new Response(JSON.stringify({ msg: "ok" }));
 	} catch (e) {
 		if (e instanceof ZodError) {

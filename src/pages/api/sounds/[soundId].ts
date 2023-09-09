@@ -1,5 +1,6 @@
 import { sounds, db } from "@/db/schema";
 import { formatZodErrors } from "@/pages/boards/_utils/serverHelper";
+import { notEmpty } from "@/utils/type";
 import type { APIRoute } from "astro";
 import { DrizzleError, eq } from "drizzle-orm";
 import { ZodError, z } from "zod";
@@ -35,11 +36,8 @@ export const DELETE: APIRoute = async ({ params }) => {
 			status: 500,
 		});
 	}
-
-	
 };
 
-const notEmpty = z.string().trim().min(1, {  message: 'Required' })
 const updatePayload = z.object({
 	name: z.string().pipe(notEmpty),
 });
@@ -57,7 +55,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
 		const { name } = updatePayload.parse(await request.json());
 		const sound = await db
 			.update(sounds)
-			.set({ name })
+			.set({ name: name.trim() })
 			.where(eq(sounds.id, soundId))
 			.returning({ userName: sounds.name });
 		return new Response(JSON.stringify({ name: sound[0].userName }));

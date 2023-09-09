@@ -1,13 +1,14 @@
 import { db, sounds } from "@/db/schema";
 import { formatZodErrors } from "@/pages/boards/_utils/serverHelper";
+import { notEmpty } from "@/utils/type";
 import type { APIRoute } from "astro";
 import { DrizzleError } from "drizzle-orm";
 import { ZodError, z } from "zod";
 
 const payload = z.object({
-	name: z.string(),
+	name: z.string().pipe(notEmpty),
 	url: z.string().url(),
-	boardId: z.string(),
+	boardId: z.string().pipe(notEmpty),
 });
 
 // create a new sound
@@ -19,7 +20,10 @@ export const POST: APIRoute = async ({ request }) => {
 	// todo: add try catch for validation and handling errors
 	try {
 		const data = payload.parse(raw);
-		const soundList = await db.insert(sounds).values(data).returning();
+		const soundList = await db
+			.insert(sounds)
+			.values({ name: data.name.trim(), url: data.url, boardId: data.boardId })
+			.returning();
 		return new Response(JSON.stringify(soundList[0]));
 	} catch (e) {
 		if (e instanceof ZodError) {

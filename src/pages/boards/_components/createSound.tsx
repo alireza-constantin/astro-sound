@@ -29,15 +29,20 @@ export function AddNewSound({ boardId, onSuccess }: AddNewSoundProps) {
 	async function soundSubmitHandler(e: React.FormEvent<HTMLFormElement>, id: string) {
 		e.preventDefault();
 		// check to see if the form state is valid
-		if (!e.currentTarget.checkValidity()) return;
+		if (!e.currentTarget.checkValidity()) {
+			e.currentTarget.childNodes.forEach((child) => {
+				if (child.nodeName === "INPUT" && child instanceof HTMLInputElement) {
+					child.setAttribute("aria-checked", "true");
+				}
+			});
+			return;
+		}
 		// parse the form data to get our data from it
 
 		const formData = new FormData(e.currentTarget);
 		const data = CreateSoundSchema.parse(Object.fromEntries(formData.entries()));
 		setIsLoading(true);
 		const sound = await createSound(boardId, data);
-
-		console.log("creatdSound: ", sound);
 
 		setSoundForm((prev) => {
 			return prev.filter((p) => p.id !== id);
@@ -49,8 +54,12 @@ export function AddNewSound({ boardId, onSuccess }: AddNewSoundProps) {
 	return (
 		<>
 			{soundForm.map(({ id }) => (
-				<form className="" onSubmit={(e) => soundSubmitHandler(e, id)} noValidate key={id}>
-					<SoundCard>
+				<SoundCard key={id}>
+					<form
+						className="space-y-2"
+						onSubmit={(e) => soundSubmitHandler(e, id)}
+						noValidate
+					>
 						<FormInput name="name" placeholder="name" type="text" />
 						<FormInput name="url" placeholder="url" type="url" />
 						<Button disabled={isLoading} className="w-full" type="submit">
@@ -58,8 +67,8 @@ export function AddNewSound({ boardId, onSuccess }: AddNewSoundProps) {
 								Create
 							</LoadingButton>
 						</Button>
-					</SoundCard>
-				</form>
+					</form>
+				</SoundCard>
 			))}
 			<Button
 				type="button"
@@ -96,6 +105,7 @@ function FormInput({ name, placeholder, type }: FormInputProps) {
 			type={type}
 			placeholder={placeholder}
 			required
+			pattern="^(?!\s+$).+"
 			aria-checked="false"
 			onFocus={(e) => {
 				if (e.currentTarget.getAttribute("aria-checked") === "true") return;
