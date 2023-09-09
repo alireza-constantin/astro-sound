@@ -15,12 +15,13 @@ type Sound = {
 };
 
 export type AddNewSoundProps = {
-	mutate: KeyedMutator<Sound[]>;
+	// mutate: KeyedMutator<Sound[]>;
 	boardId: string;
-	sounds: Sound[] | undefined;
+	// sounds: Sound[] | undefined;
+	onSuccess: (s: any) => void;
 };
 
-export function AddNewSound({ boardId, mutate, sounds }: AddNewSoundProps) {
+export function AddNewSound({ boardId, onSuccess }: AddNewSoundProps) {
 	const [soundForm, setSoundForm] = useState<Array<{ id: string }>>([]);
 
 	async function soundSubmitHandler(e: React.FormEvent<HTMLFormElement>, id: string) {
@@ -31,25 +32,13 @@ export function AddNewSound({ boardId, mutate, sounds }: AddNewSoundProps) {
 
 		const formData = new FormData(e.currentTarget);
 		const data = CreateSoundSchema.parse(Object.fromEntries(formData.entries()));
+		
+		const sound = await createSound(boardId, data)
+
 		setSoundForm((prev) => {
 			return prev.filter((p) => p.id !== id);
 		});
-
-		await mutate(createSound(boardId, data), {
-			optimisticData: [
-				...(sounds || []),
-				{
-					...data,
-					// add this properties to get rid of the typescript error
-					id: "",
-					createdAt: '',
-					boardId,
-				},
-			],
-			rollbackOnError: true,
-			populateCache: (added, current) => [...(current || []), added],
-			revalidate: false,
-		});
+		onSuccess(sound)
 	}
 
 	return (

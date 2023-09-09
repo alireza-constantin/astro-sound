@@ -17,7 +17,7 @@ export function CreateBoard() {
 		const formData = new FormData(e.currentTarget);
 		try {
 			const res = await createBoard(formData);
-			// window.location.pathname = `/boards/${res.id}`;
+			window.location.pathname = `/boards/${res.boardId}`;
 		} catch (error) {
 			console.log(error);
 		} finally {

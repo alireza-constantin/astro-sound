@@ -29,6 +29,9 @@ dependencies:
   '@radix-ui/react-slot':
     specifier: ^1.0.2
     version: 1.0.2(@types/react@18.2.21)(react@18.2.0)
+  '@tanstack/react-query':
+    specifier: ^4.35.0
+    version: 4.35.0(react-dom@18.2.0)(react@18.2.0)
   '@types/react':
     specifier: ^18.0.21
     version: 18.2.21
@@ -1535,6 +1538,28 @@ packages:
     dependencies:
       estree-walker: 2.0.2
       picomatch: 2.3.1
+    dev: false
+
+  /@tanstack/query-core@4.35.0:
+    resolution: {integrity: sha512-4GMcKQuLZQi6RFBiBZNsLhl+hQGYScRZ5ZoVq8QAzfqz9M7vcGin/2YdSESwl7WaV+Qzsb5CZOAbMBes4lNTnA==}
+    dev: false
+
+  /@tanstack/react-query@4.35.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-LLYDNnM9ewYHgjm2rzhk4KG/puN2rdoqCUD+N9+V7SwlsYwJk5ypX58rpkoZAhFyZ+KmFUJ7Iv2lIEOoUqydIg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 4.35.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /@types/babel__core@7.20.1:

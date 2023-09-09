@@ -1,36 +1,21 @@
-import useSWR from "swr";
-import { fetcher } from "../_utils/helpers";
 import { AddNewSound } from "./createSound";
 import { SoundItems } from "./soundItems";
-import { LoadingSkeleton } from "./skeletonCard";
-
-type Sound = {
-	url: string;
-	id: string;
-	name: string;
-	createdAt: string;
-	boardId: string;
-};
+import type { Sound } from "@/db/schema";
+import { useState } from "react";
 
 type Props = {
 	boardId: string;
+	soundList: Sound[];
 };
 
-export function Sounds({ boardId }: Props) {
-	const {
-		data: sounds,
-		error,
-		isLoading,
-		mutate,
-	} = useSWR<Array<Sound>>(`/api/boards/${boardId}`, fetcher);
 
-	if (error) return <div>failed to load</div>;
-	if (isLoading) return <div><LoadingSkeleton /></div>;
+export function Sounds({ boardId, soundList }: Props) {
+	const [sounds, setSounds] = useState(soundList)
 
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 mb-4">
-			<SoundItems mutate={mutate} sounds={sounds} />
-			<AddNewSound boardId={boardId} mutate={mutate} sounds={sounds} />
+			<SoundItems sounds={sounds} />
+			<AddNewSound onSuccess={s => setSounds(prev => [...prev, s])} boardId={boardId} />
 		</div>
 	);
 }

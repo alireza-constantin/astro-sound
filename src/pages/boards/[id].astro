@@ -1,7 +1,7 @@
 ---
 import { db, boards, sounds } from "@/db/schema";
 import MainLayout from "@/layouts/MainLayout.astro";
-import { BoardMenu } from "./_components/boardMenu"
+import { BoardMenu } from "./_components/boardMenu";
 import { Sounds } from "./_components/boardSounds";
 import { eq } from "drizzle-orm";
 import { BoardModal } from "./_components/boardModal";
@@ -11,20 +11,31 @@ if (!id) return;
 const url = new URL(id, Astro.url).href;
 
 const board = (await db.select().from(boards).where(eq(boards.id, id)))[0];
+const soundList = await db.select().from(sounds).where(eq(sounds.boardId, board.id));
 ---
 
 <MainLayout url="/boards">
 	<div class="mx-auto max-w-5xl mt-10">
 		<!-- handle this better -->
 		{!board && <h1>There isn't any board with id of {id}</h1>}
-		{board && <div class="mb-8 flex">
-		<h1 class="text-center flex-1 text-2xl font-semibold mb-8">{board.name}</h1>
-		<div class="ml-auto">
-			<BoardMenu url={url} boardId={board.id} boardName={board.name} client:load >				
-			</BoardMenu>
-		</div>
-		</div>
-		<Sounds boardId={board.id} client:load />
-	</div>}
+		{
+			board && (
+				<>
+					<div class="mb-8 flex">
+						<h1 class="text-center flex-1 text-2xl font-semibold mb-8">{board.name}</h1>
+						<div class="ml-auto">
+							<BoardMenu
+								url={url}
+								boardId={board.id}
+								boardName={board.name}
+								client:load
+							></BoardMenu>
+						</div>
+					</div>
+					<Sounds soundList={soundList} boardId={board.id} client:load />
+				</>
+			)
+		}
+	</div>
 	<BoardModal client:load />
 </MainLayout>
