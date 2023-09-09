@@ -126,7 +126,6 @@ function FormInput({ name, placeholder, type }: FormInputProps) {
 			onFocus={(e) => {
 				if (e.currentTarget.getAttribute("aria-checked") === "true") return;
 				e.currentTarget.setAttribute("aria-checked", "true");
-				console.log(e.target.ariaInvalid);
 			}}
 		/>
 	);

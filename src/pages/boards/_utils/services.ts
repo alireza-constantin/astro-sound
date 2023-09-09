@@ -14,12 +14,11 @@ export function createBoardModalService(boardId: string, boardName: string | und
 				await deleteBoard(boardId);
 				window.location.pathname = "/boards";
 			} catch (error) {
-				console.log(error);
+				// handle error
 			}
 		},
 		rename: async () => {
-			console.log("hello");
-			console.log(boardName);
+			
 			if (!boardName) {
 				return;
 			}
@@ -27,7 +26,7 @@ export function createBoardModalService(boardId: string, boardName: string | und
 				await renameBoard(boardId, boardName);
 				window.location.reload();
 			} catch (error) {
-				console.log(error);
+				// handle error
 			}
 		},
 	};
