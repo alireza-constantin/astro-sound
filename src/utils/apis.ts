@@ -8,7 +8,6 @@ export async function createBoard(formData: FormData): Promise<Board> {
 	}).then((res) => res.json());
 }
 
-
 export function deleteBoard(boardId: string){
     return fetch(`/api/boards/${boardId}`, {
 		method: "DELETE",

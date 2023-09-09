@@ -11,7 +11,6 @@ if (!id) return;
 const url = new URL(id, Astro.url).href;
 
 const board = (await db.select().from(boards).where(eq(boards.id, id)))[0];
-// const soundsList = await db.select().from(sounds).where(eq(sounds.boardId, id))
 ---
 
 <MainLayout url="/boards">
