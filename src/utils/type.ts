@@ -20,3 +20,7 @@ export const CreateSoundSchema = z.object({
 	url: z.string().url(),
 })
 export type CreateSoundProps = z.infer<typeof CreateSoundSchema>;
+
+export type ClientSound = {
+	[K in keyof Sound]: K extends 'createdAt' ? string : Sound[K] 
+}

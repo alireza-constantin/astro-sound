@@ -4,6 +4,7 @@ import MainLayout from "@/layouts/MainLayout.astro";
 import { BoardMenu } from "./_components/boardMenu";
 import { Sounds } from "./_components/boardSounds";
 import { eq } from "drizzle-orm";
+import type { ClientSound } from "@/utils/type";
 import { BoardModal } from "./_components/boardModal";
 const { id } = Astro.params;
 if (!id) return;
@@ -12,6 +13,7 @@ const url = new URL(id, Astro.url).href;
 
 const board = (await db.select().from(boards).where(eq(boards.id, id)))[0];
 const soundList = await db.select().from(sounds).where(eq(sounds.boardId, board.id));
+console.log(soundList);
 ---
 
 <MainLayout url="/boards">

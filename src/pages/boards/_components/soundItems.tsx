@@ -1,68 +1,50 @@
-import { deleteSound, updateSoundName } from "@/utils/apis";
+import { deleteSound } from "@/utils/apis";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { formatDistance } from "date-fns";
 import { SoundCard } from "./soundCard";
-import type { KeyedMutator } from "swr";
+import type { Sound } from "@/db/schema";
+import { useState } from "react";
 
-type Sound = {
-	url: string;
-	id: string;
-	name: string;
-	createdAt: string;
-	boardId: string;
-};
 
 export type AddNewSoundProps = {
-	mutate: KeyedMutator<Sound[]>;
 	sounds: Sound[] | undefined;
+	onDelete: (s: any) => void
 };
 
-export function SoundItems({ mutate, sounds }: AddNewSoundProps) {
+export function SoundItems({ onDelete, sounds }: AddNewSoundProps) {
 	async function handleDelete(id: string) {
-		await mutate(deleteSound(id), {
-			optimisticData: (currentSounds) => {
-				return (currentSounds || []).filter((sound) => {
-					return sound.id !== id;
-				});
-			},
-			populateCache: (_, currentSounds) => {
-				return (currentSounds || []).filter((sound) => {
-					return sound.id !== id;
-				});
-			},
-			rollbackOnError: true,
-			revalidate: false,
-		});
+		await deleteSound(id)
+		onDelete(id);
 	}
 
 	console.log(sounds);
 
-	async function handleUpdate(id: string, name: string) {
-		await mutate(updateSoundName(id, name), {
-			optimisticData: (currentSounds) => {
-				return (currentSounds || []).map((sound) => {
-					if (sound.id === id) {
-						const newSound = { ...sound };
-						newSound.name = name;
-						return newSound;
-					}
-					return sound;
-				});
-			},
-			populateCache: (updatedSound, currentSounds) => {
-				return (currentSounds || []).map((sound) => {
-					if (sound.id === id) {
-						const newSound = { ...sound };
-						newSound.name = updatedSound.name;
-						return newSound;
-					}
-					return sound;
-				});
-			},
-			rollbackOnError: true,
-			revalidate: false,
-		});
-	}
+	// async function handleUpdate(id: string, name: string) {
+	// 	await mutate(updateSoundName(id, name), {
+	// 		optimisticData: (currentSounds) => {
+	// 			return (currentSounds || []).map((sound) => {
+	// 				if (sound.id === id) {
+	// 					const newSound = { ...sound };
+	// 					newSound.name = name;
+	// 					return newSound;
+	// 				}
+	// 				return sound;
+	// 			});
+	// 		},
+	// 		populateCache: (updatedSound, currentSounds) => {
+	// 			return (currentSounds || []).map((sound) => {
+	// 				if (sound.id === id) {
+	// 					const newSound = { ...sound };
+	// 					newSound.name = updatedSound.name;
+	// 					return newSound;
+	// 				}
+	// 				return sound;
+	// 			});
+	// 		},
+	// 		rollbackOnError: true,
+	// 		revalidate: false,
+	// 	});
+	// }
 
 	return (
 		<>
@@ -80,7 +62,7 @@ export function SoundItems({ mutate, sounds }: AddNewSoundProps) {
 								if (e.currentTarget.getAttribute("aria-checked") === "true") return;
 								e.currentTarget.setAttribute("aria-checked", "true");
 							}}
-							onBlur={(e) => handleUpdate(id, e.currentTarget.value)}
+							// onBlur={(e) => handleUpdate(id, e.currentTarget.value)}
 						/>
 						<span onClick={() => handleDelete(id)} className="cursor-pointer">
 							<TrashIcon className="h-5 w-5 hover:text-rose-500" />
@@ -92,7 +74,7 @@ export function SoundItems({ mutate, sounds }: AddNewSoundProps) {
 						{url}
 					</p>
 					{createdAt && (
-						<time className="text-xs text-gray-500" dateTime={createdAt}>
+						<time className="text-xs text-gray-500" dateTime={typeof createdAt == 'string' ? createdAt : createdAt.toISOString()}>
 							created {formatDistance(new Date(createdAt), new Date())}
 						</time>
 					)}

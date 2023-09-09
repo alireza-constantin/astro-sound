@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui";
 import { Card, CardContent } from "@/components/ui/card";
+import { LoadingButton } from "@/components/ui/loadingButton";
 import { createSound } from "@/utils/apis";
 import { CreateSoundSchema } from "@/utils/type";
 import { PlusIcon } from "@radix-ui/react-icons";
@@ -22,6 +23,7 @@ export type AddNewSoundProps = {
 };
 
 export function AddNewSound({ boardId, onSuccess }: AddNewSoundProps) {
+	const [isLoading, setIsLoading] = useState(false);
 	const [soundForm, setSoundForm] = useState<Array<{ id: string }>>([]);
 
 	async function soundSubmitHandler(e: React.FormEvent<HTMLFormElement>, id: string) {
@@ -32,13 +34,16 @@ export function AddNewSound({ boardId, onSuccess }: AddNewSoundProps) {
 
 		const formData = new FormData(e.currentTarget);
 		const data = CreateSoundSchema.parse(Object.fromEntries(formData.entries()));
-		
-		const sound = await createSound(boardId, data)
+		setIsLoading(true);
+		const sound = await createSound(boardId, data);
+
+		console.log("creatdSound: ", sound);
 
 		setSoundForm((prev) => {
 			return prev.filter((p) => p.id !== id);
 		});
-		onSuccess(sound)
+		setIsLoading(false);
+		onSuccess(sound);
 	}
 
 	return (
@@ -48,8 +53,10 @@ export function AddNewSound({ boardId, onSuccess }: AddNewSoundProps) {
 					<SoundCard>
 						<FormInput name="name" placeholder="name" type="text" />
 						<FormInput name="url" placeholder="url" type="url" />
-						<Button className="w-full" type="submit">
-							Submit
+						<Button disabled={isLoading} className="w-full" type="submit">
+							<LoadingButton loading={isLoading} text="creating...">
+								Create
+							</LoadingButton>
 						</Button>
 					</SoundCard>
 				</form>
