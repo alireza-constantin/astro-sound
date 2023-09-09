@@ -3,9 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LoadingButton } from "@/components/ui/loadingButton";
 import { createSound } from "@/utils/apis";
 import { CreateSoundSchema } from "@/utils/type";
-import { PlusIcon } from "@radix-ui/react-icons";
+import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useState, type ReactNode } from "react";
-import type { KeyedMutator } from "swr";
 
 type Sound = {
 	url: string;
@@ -62,17 +61,34 @@ export function AddNewSound({ boardId, onSuccess }: AddNewSoundProps) {
 					>
 						<FormInput name="name" placeholder="name" type="text" />
 						<FormInput name="url" placeholder="url" type="url" />
-						<Button disabled={isLoading} className="w-full" type="submit">
-							<LoadingButton loading={isLoading} text="creating...">
-								Create
-							</LoadingButton>
-						</Button>
+						<div className="flex gap-1">
+							<Button
+								disabled={isLoading}
+								className="w-full rounded-r-none"
+								type="submit"
+							>
+								<LoadingButton loading={isLoading} text="creating...">
+									Create
+								</LoadingButton>
+							</Button>
+							<button
+							type="button"
+								onClick={() =>
+									setSoundForm((prevSound) =>
+										prevSound.filter((prev) => prev.id !== id),
+									)
+								}
+								className="rounded-r-md flex justify-center items-center bg-rose-600 hover:bg-rose-500"
+							>
+								<TrashIcon className="h-5 w-6 text-white" />
+							</button>
+						</div>
 					</form>
 				</SoundCard>
 			))}
 			<Button
 				type="button"
-				className="h-full rounded-xl"
+				className="h-full min-h-[158px] rounded-xl"
 				variant={"outline"}
 				onClick={() =>
 					setSoundForm((prevSound) => [
